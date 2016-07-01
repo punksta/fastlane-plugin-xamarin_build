@@ -1,0 +1,64 @@
+fastlane_version '1.96.0'
+
+default_platform :ios
+
+platform :ios do
+  def nuget(sln)
+    sh "nuget restore #{sln} -verbosity detailed"
+  end
+
+  desc 'Build xamarin project for debug and start nuunit tests'
+  lane :run_ui_tests do |options|
+    nuget(options[:sln])
+
+    xamarin_build(
+      solution: options[:sln],
+      platform: 'iPhoneSimulator',
+      target: 'Debug',
+      print_all: true
+    )
+    sh "nunit-console #{options[:dll_file]}"
+  end
+
+  desc 'Build xamarin release for iPhone with setting custom certificates and provision derived from match'
+  lane :release_custom_cert do |options|
+    app_identifier = options[:app_identifier]
+    cert_type = options[:cert_type]
+
+    match(
+      app_identifier: app_identifier
+    )
+
+    provision_uuid = ENV["sigh_#{app_identifier}_#{cert_type}"]
+
+    # certificate from provision
+    cert = other_action.extract_certificate(
+      uuid: provision_uuid,
+      log_certificate: false
+    )
+
+    # name of certificate subject
+    subject = Hash(cert.subject)
+
+    ENV['FL_XAMARIN_UPDATE_CONFIGURATION_XAMARIN_PROJECT'] = options[:$csproj]
+    ENV['FL_XAMARIN_UPDATE_CONFIGURATION_TARGET'] = 'Release'
+    ENV['FL_XAMARIN_UPDATE_CONFIGURATION_PLATFORM'] = 'iPhone'
+
+    [
+      ['CodesignProvision', provision_uuid],
+      ['CodesignKey', subject['CN']]
+    ].each do |kv|
+      other_action.xamarin_update_configuration(
+        property: kv[0],
+        value: kv[1]
+      )
+    end
+
+    xamarin_build(
+      solution: options[:sln],
+      platform: 'iPhone',
+      target: 'Release',
+      print_all: false
+    )
+  end
+end

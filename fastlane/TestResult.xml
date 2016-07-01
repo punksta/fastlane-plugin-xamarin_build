@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="/Users/user/projects/buildAgent/work/62384625dc89d786/MobiumTest/bin/Debug/MobiumTest.dll" total="1" failures="1" not-run="0" date="2016-07-01" time="17:38:18">
+  <environment nunit-version="2.4.8.0" clr-version="4.0.30319.42000" os-version="Unix 15.5.0.0" platform="Unix" cwd="/Users/user/RubymineProjects/xamarin_build/fastlane-plugin-xamarin_build/fastlane" machine-name="Mac-mini-User.local" user="user" user-domain="Mac-mini-User.local" />
+  <culture-info current-culture="ru-RU" current-uiculture="ru-RU" />
+  <test-suite name="/Users/user/projects/buildAgent/work/62384625dc89d786/MobiumTest/bin/Debug/MobiumTest.dll" success="False" time="84.061" asserts="0">
+    <results>
+      <test-suite name="MobiumTest" success="False" time="84.057" asserts="0">
+        <results>
+          <test-suite name="TestMain" success="False" time="83.992" asserts="0">
+            <results>
+              <test-case name="MobiumTest.TestMain.AppLaunches" executed="True" success="False" time="83.987" asserts="0">
+                <failure>
+                  <message><![CDATA[System.Exception : Unable to contact test backend running in app. A common cause is that the app is not properly linked with Calabash. Please verify that it includes the Calabash component.]]></message>
+                  <stack-trace><![CDATA[at Xamarin.UITest.iOS.iOSAppLauncher.EnsureCalabashRunning (ICalabashConnection connection) <0x453eb50 + 0x0005f> in <filename unknown>:0
+at Xamarin.UITest.iOS.iOSAppLauncher.LaunchApp (IiOSAppConfiguration appConfiguration, Xamarin.UITest.Shared.Http.HttpClient httpClient, Xamarin.UITest.TestCloud.TestCloudiOSAppConfiguration testCloudAppConfiguration, Xamarin.UITest.Shared.Http.HttpClient testCloudWsClient) <0x41846f0 + 0x00a27> in <filename unknown>:0
+at Xamarin.UITest.iOS.iOSApp..ctor (IiOSAppConfiguration appConfiguration) <0x4147950 + 0x00b53> in <filename unknown>:0
+at Xamarin.UITest.Configuration.iOSAppConfigurator.StartApp (AppDataMode appDataMode) <0x4145a28 + 0x00063> in <filename unknown>:0
+at MobiumTest.TestMain.AppLaunches () [0x00058] in /Users/user/projects/buildAgent/work/62384625dc89d786/MobiumTest/TestMain.cs:69
+at (wrapper managed-to-native) System.Reflection.MonoMethod:InternalInvoke (System.Reflection.MonoMethod,object,object[],System.Exception&)
+at System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00038] in /private/tmp/source-mono-4.4.0-c7-baseline/bockbuild-mono-4.4.0-c7-baseline/profiles/mono-mac-xamarin/build-root/mono-x86/mcs/class/corlib/System.Reflection/MonoMethod.cs:295
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
