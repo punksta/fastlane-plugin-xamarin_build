@@ -32,7 +32,7 @@ platform :ios do
     provision_uuid = ENV["sigh_#{app_identifier}_#{cert_type}"]
 
     # certificate from provision
-    cert = other_action.extract_certificate(
+    cert = extract_certificate(
       uuid: provision_uuid,
       log_certificate: false
     )
@@ -48,7 +48,7 @@ platform :ios do
       ['CodesignProvision', provision_uuid],
       ['CodesignKey', subject['CN']]
     ].each do |kv|
-      other_action.xamarin_update_configuration(
+      xamarin_update_configuration(
         property: kv[0],
         value: kv[1]
       )
