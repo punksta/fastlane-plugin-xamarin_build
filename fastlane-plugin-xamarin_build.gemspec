@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'nokogiri'
   spec.add_dependency 'plist'
-  spec.add_dependency 'open3'
   spec.add_dependency 'openssl'
 
 
