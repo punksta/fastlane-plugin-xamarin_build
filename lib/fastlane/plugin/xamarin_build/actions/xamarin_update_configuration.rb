@@ -8,11 +8,11 @@ module Fastlane
     class XamarinUpdateConfigurationAction < Action
       def self.run(params)
         project_path = params[:xamarin_project_file]
-        doc = nil
 
-        File.new(project_path) do |file|
-          doc = Nokogiri::XML(file)
-        end
+
+        file = File.new(project_path)
+        doc = Nokogiri::XML(file.read)
+        file.close
 
         configuration = "'#{params[:target]}|#{params[:platform]}'"
 
@@ -24,7 +24,9 @@ module Fastlane
           end
         end
 
-        File.write(project_path, doc.to_xml)
+        xml = doc.to_xml
+        UI.command_output(xml) if $verbose
+        File.write(project_path, xml)
       end
 
       #####################################################

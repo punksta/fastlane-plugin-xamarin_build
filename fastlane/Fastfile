@@ -22,14 +22,8 @@ platform :ios do
 
   desc 'Build xamarin release for iPhone with setting custom certificates and provision derived from match'
   lane :release_custom_cert do |options|
-    app_identifier = options[:app_identifier]
-    cert_type = options[:cert_type]
 
-    match(
-      app_identifier: app_identifier
-    )
-
-    provision_uuid = ENV["sigh_#{app_identifier}_#{cert_type}"]
+    provision_uuid = "ef857752-5177-4399-bf2e-1c889b4386a0"
 
     # certificate from provision
     cert = extract_certificate(
@@ -37,16 +31,16 @@ platform :ios do
       log_certificate: false
     )
 
-    # name of certificate subject
-    subject = Hash(cert.subject)
+    subject = Hash[cert.subject.to_a.map {|arr|  [arr[0], arr[1]]}]
+    name = subject['CN']
 
-    ENV['FL_XAMARIN_UPDATE_CONFIGURATION_XAMARIN_PROJECT'] = options[:$csproj]
+    ENV['FL_XAMARIN_UPDATE_CONFIGURATION_XAMARIN_PROJECT'] = options[:csproj]
     ENV['FL_XAMARIN_UPDATE_CONFIGURATION_TARGET'] = 'Release'
     ENV['FL_XAMARIN_UPDATE_CONFIGURATION_PLATFORM'] = 'iPhone'
 
     [
       ['CodesignProvision', provision_uuid],
-      ['CodesignKey', subject['CN']]
+      ['CodesignKey', name]
     ].each do |kv|
       xamarin_update_configuration(
         property: kv[0],

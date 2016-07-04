@@ -1,6 +1,7 @@
 require 'plist'
 require 'open3'
 require 'openssl'
+require 'provision_util'
 
 module Fastlane
   module Actions
@@ -11,20 +12,7 @@ module Fastlane
         path = params[:provision_path]
         path = default_path(params[:uuid]) if path.nil?
         check_profile(path)
-
-        o, e, s = Open3.capture3("security cms -D -i '#{path}'")
-        if s.exitstatus != 0
-          UI.user_error!("Can't extract plist from provision profile\n" + e)
-        end
-
-        provision_plist_raw = o
-        provision_plist = Plist.parse_xml(provision_plist_raw)
-
-        cert_data = provision_plist['DeveloperCertificates'][0].string
-        cert = OpenSSL::X509::Certificate.new(cert_data)
-
-        print cert.to_text if params[:log_certificate]
-        cert
+        return ProvisionUtil::get_cert_from_provision(path)
       end
 
       def self.description
