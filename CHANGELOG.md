@@ -1,3 +1,6 @@
+## 0.1.3
+> fix gem file
+
 ## 0.1.2
 > fix bugs, added ruby 2.0 support
 
