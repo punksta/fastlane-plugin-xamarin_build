@@ -6,22 +6,53 @@ module Fastlane
 
       def self.run(params)
         platform = params[:platform]
+        project = params[:project]
+
+        projects = (params[:projects] or '').split(',').select do |item|
+          item.size > 0
+        end
+
+        projects << project if project != nil
+        projects = projects.uniq
+
+        if params[:build_util] == 'mdtool'
+          if projects.size > 0
+            mdtool_build_projects(params, projects)
+          else
+            mdtool_build_solution(params)
+          end
+        else
+          puts "echo 'not supported yet'"
+        end
+
+        build_type = params[:build_type]
+        solution = params[:solution]
+        get_build_path(platform, build_type, solution)
+      end
+
+      def self.mdtool_build_projects(params, projects)
+        platform = params[:platform]
         build_type = params[:build_type]
         target = params[:target]
         solution = params[:solution]
-        util = params[:build_util]
 
-        if util == 'mdtool'
+        for project in projects
           configuration = "--configuration:#{build_type}|#{platform}"
-          command = "#{MDTOOL} build -t #{target} #{solution} \"#{configuration}\""
-        else
-          command = "echo 'not supported yet'"
+          command = "#{MDTOOL} build -t:#{target} -p:#{project} #{solution} \"#{configuration}\""
+          Helper::XamarinBuildHelper.bash(command, !params[:print_all])
         end
 
-        # FastlaneCore::CommandExecutor.execute store logs in ram.
-        Helper::XamarinBuildHelper.bash(command, !params[:print_all])
+      end
 
-        get_build_path(platform, build_type, solution)
+      def self.mdtool_build_solution(params)
+        platform = params[:platform]
+        build_type = params[:build_type]
+        target = params[:target]
+        solution = params[:solution]
+
+        configuration = "--configuration:#{build_type}|#{platform}"
+        command = "#{MDTOOL} build -t:#{target} #{solution} \"#{configuration}\""
+        Helper::XamarinBuildHelper.bash(command, !params[:print_all])
       end
 
       # Returns bin path for given platform and build_type or nil
@@ -116,6 +147,22 @@ module Fastlane
               verify_block: proc do |value|
                 UI.user_error!("Unsupported build util! Une of #{BUILD_UTIL.join '\' '}".red) unless BUILD_UTIL.include? value
               end
+          ),
+
+          FastlaneCore::ConfigItem.new(
+              key: :project,
+              env_name: 'FL_XAMARIN_BUILD_PROJECT',
+              description: 'Project to build or clean',
+              is_string: true,
+              optional: true
+          ),
+
+          FastlaneCore::ConfigItem.new(
+              key: :projects,
+              env_name: 'FL_XAMARIN_BUILD_PROJECTS',
+              description: 'Projects to build or clean, separated by coma',
+              is_string: true,
+              optional: true
           )
         ]
       end
