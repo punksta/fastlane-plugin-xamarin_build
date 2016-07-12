@@ -14,7 +14,7 @@ module Fastlane
         doc = Nokogiri::XML(file.read)
         file.close
 
-        configuration = "'#{params[:target]}|#{params[:platform]}'"
+        configuration = "'#{params[:build_type]}|#{params[:platform]}'"
 
         doc.search('PropertyGroup').each do |group|
           next unless !group['Condition'].nil? && group['Condition'].include?(configuration)
@@ -54,12 +54,12 @@ module Fastlane
                                          UI.user_error!('Project file not found') unless File.exist? value
                                        end),
 
-          FastlaneCore::ConfigItem.new(key: :target,
+          FastlaneCore::ConfigItem.new(key: :build_type,
                                        env_name: 'FL_XAMARIN_UPDATE_CONFIGURATION_TARGET',
                                        description: 'Target of configuration PropertyGroup',
                                        is_string: true,
                                        verify_block: proc do |value|
-                                         UI.user_error!("Unsupported target! Use one of #{TARGET}") unless TARGET.include? value
+                                         UI.user_error!("Unsupported build_type! Use one of #{TARGET}") unless TARGET.include? value
                                        end),
 
           FastlaneCore::ConfigItem.new(key: :platform,

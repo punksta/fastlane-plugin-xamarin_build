@@ -22,13 +22,19 @@ module Fastlane
             mdtool_build_solution(params)
           end
         else
-          puts "echo 'not supported yet'"
+          if projects.size > 0
+            puts "echo 'not supported yet'"
+          else
+            xbuild_build_solution(params)
+          end
         end
 
         build_type = params[:build_type]
         solution = params[:solution]
         get_build_path(platform, build_type, solution)
       end
+
+
 
       def self.mdtool_build_projects(params, projects)
         platform = params[:platform]
@@ -43,6 +49,25 @@ module Fastlane
         end
 
       end
+
+      def self.xbuild_build_solution(params)
+        platform = params[:platform]
+        build_type = params[:build_type]
+        target = params[:target]
+        solution = params[:solution]
+
+        command = "#{XBUILD} "
+        command << "/target:#{target} " if target != nil
+        command << "/p:Platform=#{platform} " if platform != nil
+        command << "/p:Configuration=#{build_type} " if build_type != nil
+        command << solution
+
+        Helper::XamarinBuildHelper.bash(command, !params[:print_all])
+      end
+
+
+
+
 
       def self.mdtool_build_solution(params)
         platform = params[:platform]
@@ -82,7 +107,7 @@ module Fastlane
       TARGET_TYPES = %w(Build Clean).freeze
       PRINT_ALL = [true, false].freeze
       BUILD_UTIL = [
-          #'xbuild',
+          'xbuild',
           'mdtool'
       ].freeze
 
@@ -160,7 +185,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(
               key: :projects,
               env_name: 'FL_XAMARIN_BUILD_PROJECTS',
-              description: 'Projects to build or clean, separated by coma',
+              description: 'Projects to build or clean, separated by ,',
               is_string: true,
               optional: true
           )
