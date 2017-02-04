@@ -40,7 +40,6 @@ module Fastlane
         ['punksta']
       end
 
-      TARGET_TYPES = %w(Release Debug).freeze
       PRINT_ALL = [true, false].freeze
 
       def self.available_options
@@ -65,10 +64,7 @@ module Fastlane
             key: :target,
             env_name: 'FL_XAMARIN_BUILD_TARGET',
             description: 'Target build type',
-            type: String,
-            verify_block: proc do |value|
-              UI.user_error!("Unsupported platform. Use one of #{TARGET_TYPES.join '\' '}".red) unless TARGET_TYPES.include? value
-            end
+            type: String
           ),
 
           FastlaneCore::ConfigItem.new(
