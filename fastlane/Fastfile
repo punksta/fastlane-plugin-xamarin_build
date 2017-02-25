@@ -7,6 +7,27 @@ platform :ios do
     sh "nuget restore #{sln} -verbosity detailed"
   end
 
+  desc 'Release build with clean'
+  lane :release_build do
+    xamarin_build(
+        solution: '/Users/user/projects/buildAgent/work/1/Pro.sln',
+        platform: 'iPhone',
+        target: 'Clean',
+        project: 'subproject1,subproject2,subproject3',
+        build_type: 'Release',
+        print_all: true
+    )
+
+    xamarin_build(
+        solution: '/Users/user/projects/buildAgent/work/1/Pro.sln',
+        platform: 'iPhone',
+        target: 'Build',
+        build_type: 'Release',
+        print_all: false
+    )
+
+  end
+
   desc 'Build xamarin project for debug and start nuunit tests'
   lane :run_ui_tests do |options|
     nuget(options[:sln])
@@ -14,7 +35,8 @@ platform :ios do
     xamarin_build(
       solution: options[:sln],
       platform: 'iPhoneSimulator',
-      target: 'Debug',
+      build_type: 'Debug',
+      target: 'Clean',
       print_all: true
     )
     sh "nunit-console #{options[:dll_file]}"
@@ -51,7 +73,8 @@ platform :ios do
     xamarin_build(
       solution: options[:sln],
       platform: 'iPhone',
-      target: 'Release',
+      target: 'Clean',
+      build_type: 'Release',
       print_all: false
     )
   end
