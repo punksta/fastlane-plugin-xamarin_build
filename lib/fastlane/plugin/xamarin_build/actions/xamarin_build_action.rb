@@ -104,12 +104,8 @@ module Fastlane
       end
 
       BUILD_TYPES = %w(Release Debug).freeze
-      TARGET_TYPES = %w(Build Clean).freeze
       PRINT_ALL = [true, false].freeze
-      BUILD_UTIL = [
-          'xbuild',
-          'mdtool'
-      ].freeze
+      BUILD_UTIL = %w(xbuild mdtool).freeze
 
       def self.available_options
         [
@@ -133,10 +129,7 @@ module Fastlane
               key: :build_type,
               env_name: 'FL_XAMARIN_BUILD_TYPE',
               description: 'Release or Debug',
-              type: String,
-              verify_block: proc do |value|
-                UI.user_error!("Unsupported build type! Use one of #{BUILD_TYPES.join '\' '}".red) unless BUILD_TYPES.include? value
-              end
+              type: String
           ),
 
           FastlaneCore::ConfigItem.new(

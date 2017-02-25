@@ -57,10 +57,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :build_type,
                                        env_name: 'FL_XAMARIN_UPDATE_CONFIGURATION_TARGET',
                                        description: 'Target of configuration PropertyGroup',
-                                       is_string: true,
-                                       verify_block: proc do |value|
-                                         UI.user_error!("Unsupported build_type! Use one of #{TARGET}") unless TARGET.include? value
-                                       end),
+                                       is_string: true),
 
           FastlaneCore::ConfigItem.new(key: :platform,
                                        env_name: 'FL_XAMARIN_UPDATE_CONFIGURATION_PLATFORM',
