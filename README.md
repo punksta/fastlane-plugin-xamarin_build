@@ -34,7 +34,7 @@ Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plu
 
 To run both the tests, and code style validation, run
 
-````
+```
 rake
 ```
 
