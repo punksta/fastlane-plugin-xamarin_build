@@ -2,7 +2,7 @@ module Fastlane
   module Actions
     class XamarinBuildAction < Action
       MDTOOL = '/Applications/Visual\ Studio.app/Contents/MacOS/vstool'.freeze
-      XBUILD = '/Library/Frameworks/Mono.framework/Commands/xbuild'.freeze
+      XBUILD = '/Library/Frameworks/Mono.framework/Commands/msbuild'.freeze
 
       def self.run(params)
         platform = params[:platform]
