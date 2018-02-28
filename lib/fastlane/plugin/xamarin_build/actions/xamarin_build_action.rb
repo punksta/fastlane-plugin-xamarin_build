@@ -179,7 +179,14 @@ module Fastlane
               description: 'Projects to build or clean, separated by ,',
               is_string: true,
               optional: true
-          )
+          ),
+					FastlaneCore::ConfigItem.new(
+							key: :output_path,
+							env_name: 'FL_XAMARIN_BUILD_OUTPUT_PATH',
+							description: 'Build path for android apk',
+							is_string: true,
+							optional: true
+					)
         ]
       end
 
