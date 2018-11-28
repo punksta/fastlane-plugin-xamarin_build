@@ -2,7 +2,7 @@ module Fastlane
   module Actions
     class XamarinBuildAction < Action
       MDTOOL = '/Applications/Visual\ Studio.app/Contents/MacOS/vstool'.freeze
-      XBUILD = '/Library/Frameworks/Mono.framework/Commands/xbuild'.freeze
+      MSBUILD = '/Library/Frameworks/Mono.framework/Commands/msbuild'.freeze
 
       def self.run(params)
         platform = params[:platform]
@@ -25,7 +25,7 @@ module Fastlane
           if projects.size > 0
             puts "echo 'not supported yet'"
           else
-            xbuild_build_solution(params)
+            msbuild_build_solution(params)
           end
         end
 
@@ -50,16 +50,18 @@ module Fastlane
 
       end
 
-      def self.xbuild_build_solution(params)
+      def self.msbuild_build_solution(params)
         platform = params[:platform]
         build_type = params[:build_type]
         target = params[:target]
         solution = params[:solution]
+				output_path = params[:output_path]
 
-        command = "#{XBUILD} "
+        command = "#{MSBUILD} "
         command << "/target:#{target} " if target != nil
         command << "/p:Platform=#{platform} " if platform != nil
         command << "/p:Configuration=#{build_type} " if build_type != nil
+				command << "/p:OutputPath=#{output_path} " if output_path != nil
         command << solution
 
         Helper::XamarinBuildHelper.bash(command, !params[:print_all])
@@ -105,7 +107,7 @@ module Fastlane
 
       BUILD_TYPES = %w(Release Debug).freeze
       PRINT_ALL = [true, false].freeze
-      BUILD_UTIL = %w(xbuild mdtool).freeze
+      BUILD_UTIL = %w(msbuild mdtool).freeze
 
       def self.available_options
         [
@@ -177,7 +179,14 @@ module Fastlane
               description: 'Projects to build or clean, separated by ,',
               is_string: true,
               optional: true
-          )
+          ),
+					FastlaneCore::ConfigItem.new(
+							key: :output_path,
+							env_name: 'FL_XAMARIN_BUILD_OUTPUT_PATH',
+							description: 'Build path for android apk',
+							is_string: true,
+							optional: true
+					)
         ]
       end
 
